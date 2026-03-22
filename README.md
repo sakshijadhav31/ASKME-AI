@@ -1,6 +1,6 @@
-# 🚀 ASKME AI -  Full-Stack Gemini Chat Application
+# AI Chat Application
 
-**ASKME AI** is a professional-grade AI-powered chat platform built with a modern full-stack architecture. It uses Google’s **Gemini Models** for real-time streaming responses and provides a persistent, secure chat environment with a premium Obsidian dark UI.
+This is a full-stack AI chat application built using React for the frontend and FastAPI for the backend, with PostgreSQL as the database. The application integrates with the Google Gemini API to generate intelligent responses.Users can authenticate using Google OAuth, create chat sessions, send messages, and receive AI-generated replies while maintaining chat history.
 
 ---
 <p align="center">
@@ -107,13 +107,6 @@
 
 ---
 
-## 📌 Notes
-
-- Uses **app-based FastAPI architecture**
-- Uses **src-based React structure (Vite standard)**
-- Clean separation of frontend & backend
-- Designed for **scalable and production-ready deployment**
-
 ## ⚙️ Setup & Installation
 
 ### ✅ Prerequisites
@@ -148,6 +141,8 @@ pip install -r requirements.txt
 ```
 
 ### 🔐 Environment Variables
+
+Create PostgreSQL Database
 
 Create a `.env` file:
 
@@ -242,108 +237,6 @@ The backend uses **SQLAlchemy 2.0 (Async ORM)** with PostgreSQL optimizations li
        style="max-width:500px;">
 </p>
 ---
-### 👤 User Model
-
-Represents an authenticated user (via Google OAuth).
-
-**Fields:**
-- `id` (String) – Unique Google user ID (Primary Key)
-- `name` (String) – User's display name
-- `email` (String) – User email (unique)
-- `created_at` (DateTime) – Account creation timestamp
-
-**Relationships:**
-- One-to-Many → ChatSession (`sessions`)
-- One-to-Many → UserLog (`logs`)
-
-**Key Features:**
-- Synced using Google OAuth (`/api/v1/users/sync-user`)
-- Root entity for all user data
-- Cascade delete:
-  - User → Chats → Messages
-
----
-
-### 💬 ChatSession Model
-
-Represents a conversation thread between user and AI.
-
-**Fields:**
-- `id` (UUID)
-- `user_id` (String)
-- `title` (String)
-- `created_at` (DateTime)
-
-**Relationships:**
-- Many-to-One → User
-- One-to-Many → Message
-
-**Key Features:**
-- Cascade delete enabled
-- Indexed on `user_id`
-
----
-
-### 📨 Message Model
-
-Stores messages inside a chat session.
-
-**Fields:**
-- `id` (UUID)
-- `chat_id` (UUID)
-- `role` (user / assistant)
-- `message` (Text)
-- `created_at` (DateTime)
-
-**Relationships:**
-- Many-to-One → ChatSession
-
-**Performance:**
-- Composite index `(chat_id, created_at ASC)` for fast history retrieval
-
----
-
-### 📊 UserLog Model
-
-Tracks system activity and user behavior.
-
-**Fields:**
-- `id` (UUID)
-- `user_id` (String)
-- `request_id` (String)
-- `action` (String)
-- `category` (String)
-- `status_code` (Integer)
-- `is_success` (Boolean)
-- `error_code` (String)
-- `meta` (JSONB)
-- `ip_address` (INET)
-- `user_agent` (String)
-- `path` (String)
-- `created_at` (DateTime)
-
-**Key Features:**
-- JSONB for flexible metadata
-- INET for IP tracking
-- Full audit logging system
-
-**Indexes:**
-- `(user_id, created_at DESC)`
-- `GIN(meta)` for JSON queries
-
----
-
-## ⚡ Advanced Backend Implementation
-
-- 🔄 **Async Streaming** – FastAPI `StreamingResponse`
-- ⚙️ **Background Tasks** – Non-blocking DB writes
-- 🧠 **Context Memory** – Last 20 messages used for AI context
-- 🧹 **Manual Cascade Safety**
-- 📊 **Audit Trail** – Tracks IP, user-agent, actions
-
----
-
-
 
 ## 📌 Future Improvements
 
